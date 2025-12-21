@@ -1,0 +1,52 @@
+﻿@foreach (var item in GetOrderedItems ())
+{
+	@ChildContent(item)
+}
+
+@typeparam T
+@code {
+	[Parameter]
+	public IEnumerable<T> Items { get; set; } = [];
+
+	[Parameter]
+	public RenderFragment<T> ChildContent { get; set; } = default!;
+
+	[Parameter]
+	public string OrderOn { get; set; } = string.Empty;
+
+	[Parameter]
+	public IndexOrder IndexOrder { get; set; } = IndexOrder.Ascending;
+
+	private IEnumerable<T> GetOrderedItems ()
+	{
+		if (string.IsNullOrWhiteSpace (OrderOn))
+			return Items;
+
+		var property = typeof (T).GetProperty (OrderOn, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+		if (property is null || !property.CanRead)
+			return Items;
+
+		return IndexOrder is IndexOrder.Ascending
+			? Items.OrderBy (i => property.GetValue (i, null))
+			: Items.OrderByDescending (i => property.GetValue (i, null));
+
+		// Func<T, IComparable?> keySelector = item =>
+		// {
+		// 	var value = property.GetValue (item, null);
+
+		// 	return value switch
+		// 	{
+		// 		null => null,
+		// 		DateOnly d => d.ToDateTime (TimeOnly.MinValue),
+		// 		Enum e => Convert.ToInt32 (e),
+		// 		IComparable cmp => cmp,
+		// 		_ => value.ToString ()
+		// 	};
+		// };
+
+		// return IndexOrder is IndexOrder.Ascending
+		// 	? Items.OrderBy (keySelector)
+		// 	: Items.OrderByDescending (keySelector);
+	}
+}

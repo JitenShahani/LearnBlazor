@@ -1,0 +1,128 @@
+﻿<PageTitle>Learn Routing</PageTitle>
+
+<h3>Learn Routing</h3>
+
+<div class="alert alert-primary pb-0 mb-3">
+	<p>I have configured the route in NavMenu.razor to focus an id named `targetElement` which is an h2 tag with text `Main title`.</p>
+	<p>Pass some route based parameters...</p>
+	<ul>
+		<li>First parameter is a string.</li>
+		<li>Second parameter is an integer.</li>
+		<li>If you navigate to <code>/learnBlazor/learnRouting/catchAll/Hello, World!/Awesome/42069</code> and pass more than one route parameter(s), they will all be leveraged into a single parameter of type string.</li>
+		<li>This component also listens to Query parameters. Try navigating to <code>/learnBlazor/learnRouting?Param1=Hello, World!&Param2=42169</code></li>
+	</ul>
+</div>
+
+@if (!string.IsNullOrWhiteSpace (Param1))
+{
+	<div class="badge text-bg-@_randomColor1 @(_randomColor1 == "light" ? "border border-primary" : "") p-3 position-relative me-2">
+		<span>@Param1</span>
+
+		<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">@_typeOfParam1</span>
+	</div>
+}
+
+@if (Param2 > 0)
+{
+	<div class="badge text-bg-@_randomColor2 @(_randomColor2 == "light" ? "border border-primary" : "") p-3 position-relative me-2">
+		<span>@Param2</span>
+
+		<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">@_typeOfParam2</span>
+	</div>
+}
+
+@if (!string.IsNullOrWhiteSpace (AllParameters))
+{
+	<div class="badge text-bg-@_randomColor @(_randomColor == "light" ? "border border-primary" : "") p-3 position-relative me-2">
+		@foreach (var param in AllParameters.Split ('/'))
+		{
+			<span class="me-2">@param</span>
+		}
+		<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">@_typeOfParam</span>
+	</div>
+}
+
+<div class="bg-info mt-3 mb-3" style="height: 1000px;"></div>
+
+<h2 id="targetElement">Main title</h2>
+
+<div class="my-3">
+	<a href="learnBlazor/learnRouting?Param1=Learn Blazor&Param2=42169" class="btn btn-link shadow-none">Navigate to query parameter</a>
+	<button class="btn btn-primary shadow-none" @onclick="NavigateToQueryParameters">Navigate to query parameters</button>
+	<button class="btn btn-success shadow-none" @onclick="LoadParameters">Load Parameters</button>
+</div>
+
+@page "/learnBlazor/learnRouting"
+@page "/learnBlazor/learnRouting/{Param1}"
+@page "/learnBlazor/learnRouting/{Param1}/{Param2:int}"
+@page "/learnBlazor/learnRouting/catchAll/{*AllParameters}"
+@rendermode InteractiveServer
+@inject NavigationManager NavManager
+@code {
+	private string _randomColor = string.Empty;
+	private string _randomColor1 = string.Empty;
+	private string _randomColor2 = string.Empty;
+
+	private string _typeOfParam = string.Empty;
+	private string _typeOfParam1 = string.Empty;
+	private string _typeOfParam2 = string.Empty;
+
+	private string[] _supportedColors = ["primary", "secondary", "success", "warning", "info", "light", "dark"];
+
+	[Parameter]
+	// [SupplyParameterFromQuery (Name = "Param1")]
+	public string? Param1 { get; set; }
+	[Parameter]
+	// [SupplyParameterFromQuery (Name = "Param2")]
+	public int? Param2 { get; set; } = 0;
+	[Parameter]
+	public string? AllParameters { get; set; }
+
+	protected override void OnInitialized ()
+	{
+		NavManager.LocationChanged += (_, _) =>
+		{
+			LoadParameters ();
+			StateHasChanged ();
+		};
+
+		LoadParameters ();
+		base.OnInitialized ();
+	}
+
+	protected override void OnParametersSet ()
+	{
+		_typeOfParam = AllParameters?.GetType ().Name!;
+		_randomColor = _supportedColors[Random.Shared.Next (_supportedColors.Length)];
+
+		_typeOfParam1 = Param1?.GetType ().Name!;
+		_randomColor1 = _supportedColors[Random.Shared.Next (_supportedColors.Length)];
+
+		_typeOfParam2 = Param2?.GetType ().Name!;
+		_randomColor2 = _supportedColors[Random.Shared.Next (_supportedColors.Length)];
+
+		base.OnParametersSet ();
+	}
+
+	private void NavigateToQueryParameters ()
+	{
+		NavManager.NavigateTo ("learnBlazor/learnRouting?Param1=Hello, World!&Param2=42069");
+	}
+
+	private void LoadParameters ()
+	{
+		var uri = NavManager.ToAbsoluteUri (NavManager.Uri);
+		var query = HttpUtility.ParseQueryString (uri.Query);
+
+		if (query.Count > 0)
+		{
+			Param1 = query["Param1"];
+			_typeOfParam1 = Param1?.GetType ().Name!;
+
+			Param2 = int.TryParse (query["Param2"], out var param2) ? param2 : 0;
+			_typeOfParam2 = Param2?.GetType ().Name!;
+		}
+
+		OnParametersSet ();
+	}
+}

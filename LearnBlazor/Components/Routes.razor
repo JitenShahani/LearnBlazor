@@ -1,0 +1,26 @@
+﻿<Router AppAssembly="typeof (Program).Assembly" NotFoundPage="typeof (Pages.NotFound)">
+	<Found Context="routeData">
+		<CascadingValue Name="RenderMode" Value="@(GetRenderMode (routeData))">
+			<RouteView RouteData="routeData" DefaultLayout="typeof (Layout.MainLayout)" />
+		</CascadingValue>
+		<FocusOnNavigate RouteData="routeData" Selector="h1" />
+	</Found>
+</Router>
+
+@code {
+	private string GetRenderMode (RouteData routeData)
+	{
+		var mode = routeData.PageType
+			.GetCustomAttributes (typeof (RenderModeAttribute), inherit: true)
+			.OfType<RenderModeAttribute> ()
+			.FirstOrDefault ()?.Mode!;
+
+		return mode switch
+		{
+			InteractiveServerRenderMode => "Interactive Server",
+			InteractiveWebAssemblyRenderMode => "Interactive Web Assembly",
+			null => "Static",
+			_ => "Unknown"
+		};
+	}
+}

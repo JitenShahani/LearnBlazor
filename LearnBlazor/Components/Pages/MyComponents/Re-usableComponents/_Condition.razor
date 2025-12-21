@@ -1,0 +1,44 @@
+﻿@* Renders:
+    - True when Evaluation is true
+    - First ElseIf whose Evaluation is true
+    - False when none match *@
+
+@_chosen
+
+@code {
+    [Parameter]
+    public bool Evaluation { get; set; }
+
+    [Parameter]
+    public RenderFragment? True { get; set; }
+
+    [Parameter]
+    public RenderFragment? False { get; set; }
+
+    // Else-if branches as data: (condition, content)
+    [Parameter]
+    public IEnumerable<(bool Evaluation, RenderFragment Content)> ElseIfs { get; set; } = [];
+
+    private RenderFragment _chosen = _ => { };
+
+    protected override void OnParametersSet ()
+    {
+        // if
+        if (Evaluation && True is not null)
+        {
+            _chosen = True;
+            return;
+        }
+
+        // else-if chain
+        var match = ElseIfs.FirstOrDefault (e => e.Evaluation).Content;
+        if (match is not null)
+        {
+            _chosen = match;
+            return;
+        }
+
+        // else
+        _chosen = False ?? (_ => { });
+    }
+}

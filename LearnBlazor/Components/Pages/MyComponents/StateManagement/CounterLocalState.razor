@@ -1,0 +1,40 @@
+﻿<PageTitle>Counter</PageTitle>
+
+<_InfoBox HeaderText="Counter - Manage State Locally using a service.">
+	<Body>
+		<p>
+			In this approach, state is maintained inside a scoped service class registered with Dependency Injection (DI). The service simply exposes a property that holds the current state. Components inject the service and read or update this property directly. Because the service is scoped, the property value is shared across all components in the user’s session and persists during navigation.
+		</p>
+		<p>
+			Best for: Simple scenarios where you just need to share a value across components without extra logic or persistence.
+		</p>
+	</Body>
+</_InfoBox>
+
+<p role="status">Current count: @_currentCount</p>
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" @onclick="IncrementCount">
+	<Icon Name="IconName.ArrowUp" />
+	Click Me
+</Button>
+
+@page "/learnBlazor/counterLocalState"
+@rendermode InteractiveServer
+@inject CounterService CounterService
+@code {
+	private int _currentCount = 0;
+
+	protected override void OnInitialized ()
+	{
+		if (CounterService.CounterValue > 0)
+			_currentCount = CounterService.CounterValue;
+
+		base.OnInitialized ();
+	}
+
+	private void IncrementCount ()
+	{
+		_currentCount++;
+		CounterService.CounterValue = _currentCount;
+	}
+}

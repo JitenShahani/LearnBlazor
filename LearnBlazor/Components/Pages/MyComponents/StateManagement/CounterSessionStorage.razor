@@ -1,0 +1,42 @@
+﻿<PageTitle>Counter</PageTitle>
+
+<_InfoBox HeaderText="Counter - Manage State using Browser's Session Storage">
+	<Body>
+		<p>
+			This method uses the browser’s Session Storage, which is similar to Local Storage but scoped to the current browser tab. Once the tab is closed, the state is lost. The counter value is stored and retrieved per session.
+		</p>
+		<p>
+			Best for: Temporary state that should reset when the user closes the tab (e.g., form progress, temporary filters)
+		</p>
+	</Body>
+</_InfoBox>
+
+<p role="status">Current count: @_currentCount</p>
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" @onclick="IncrementCount">
+	<Icon Name="IconName.ArrowUp" />
+	Click Me
+</Button>
+
+@page "/learnBlazor/counterSessionStorage"
+@rendermode InteractiveServer
+@inject ProtectedSessionStorage SessionStore
+@code {
+	private int _currentCount = 0;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var counterValue = await SessionStore.GetAsync<int> ("counterValue");
+			_currentCount = counterValue.Success ? counterValue.Value : 0;
+			await InvokeAsync (StateHasChanged);
+		}
+	}
+
+	private async Task IncrementCount ()
+	{
+		_currentCount++;
+		await SessionStore.SetAsync ("counterValue", _currentCount);
+	}
+}

@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<base href="/" />
+	<ResourcePreloader />
+	<!-- Bootstrap style sheet -->
+	<link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
+	@* <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> *@
+	<!-- Bootstrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<!-- Toastr style sheet -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<!-- Sweet Alert 2 style sheet -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css">
+	<!-- Custom app style sheet -->
+	<link rel="stylesheet" href="@Assets["app.css"]" />
+	<!-- Component specific isolated style sheet(s) -->
+	<link rel="stylesheet" href="@Assets["LearnBlazor.styles.css"]" />
+	<!-- Blazor.Bootstrap style sheet -->
+	<link rel="preload" href="_content/Blazor.Bootstrap/blazor.bootstrap.css" as="style" />
+	<ImportMap />
+	<!-- Icon -->
+	<link rel="icon" type="image/png" href="favicon.png" />
+	<HeadOutlet @rendermode="InteractiveServer" />
+</head>
+
+<body>
+	<Routes @rendermode="InteractiveServer" />
+	<ReconnectModal />
+
+	<!-- jQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<!-- Sweet Alert 2 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+	<!-- Toastr -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<!-- My Custom script -->
+	<script src="@Assets["js/common.js"]"></script>
+	<!-- Bootstrap -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Document specific isolated scripts -->
+	<script src="@Assets["_framework/blazor.web.js"]"></script>
+
+	<!-- Blazor.Bootstrap -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+	<!-- Add chart.js reference if chart components are used in your application. -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.umd.js" integrity="sha512-gQhCDsnnnUfaRzD8k1L5llCCV6O9HN09zClIzzeJ8OJ9MpGmIlCxm+pdCkqTwqJ4JcjbojFr79rl2F1mzcoLMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- Add chartjs-plugin-datalabels.min.js reference if chart components with data label feature is used in your application. -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- Add sortable.js reference if SortableList component is used in your application. -->
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+	<!-- Blazor.Bootstrap -->
+	<script src="@Assets["_content/Blazor.Bootstrap/blazor.bootstrap.js"]"></script>
+	<!-- Custom Script to pause & resume Blazor -->
+	<script defer>
+		let circuitPaused = false;
+
+		document.addEventListener('visibilitychange', () => {
+			if (document.visibilityState === 'hidden') {
+				if (!circuitPaused && window.Blazor && Blazor.pauseCircuit) {
+					console.debug("Document hidden - pausing Blazor");
+					Blazor.pauseCircuit();
+					circuitPaused = true;
+				}
+			} else {
+				if (circuitPaused && window.Blazor && Blazor.resumeCircuit) {
+					console.debug("Document visible - resuming Blazor");
+					Blazor.resumeCircuit();
+					circuitPaused = false;
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>
+
+@code {
+	/*
+	[CascadingParameter]
+	private HttpContext HttpContext { get; set; } = default!;
+
+	private IComponentRenderMode? PageRenderMode
+		=> HttpContext.AcceptsInteractiveRouting () ? InteractiveServer : null;
+	*/
+}

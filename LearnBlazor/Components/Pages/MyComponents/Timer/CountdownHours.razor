@@ -1,0 +1,37 @@
+﻿<PageTitle>Countdown Timer Hours</PageTitle>
+
+<div style="height: calc(100vh - 74px);" class="d-flex justify-content-center align-items-center">
+	<span class="fw-bold" style="font-size: 65px; color: var(--body-color)">Countdown Timer : @TimeLeft</span>
+</div>
+
+@page "/learnBlazor/countdownHours"
+@rendermode InteractiveServer
+@code {
+	[PersistentState]
+	public Timer? Timer { get; set; }
+
+	[PersistentState]
+	public TimeSpan? TimeLeft { get; set; }
+
+	protected override void OnInitialized()
+	{
+		TimeLeft ??= TimeSpan.FromHours (1);
+
+		Timer ??= new (1000);
+		Timer.Elapsed += TimerElapsed;
+		Timer.Start ();
+	}
+
+	private void TimerElapsed(object? sender, ElapsedEventArgs e)
+	{
+		TimeLeft = TimeLeft?.Subtract (TimeSpan.FromSeconds(1));
+
+		if (TimeLeft?.TotalSeconds <= 0)
+		{
+			Timer?.Stop ();
+			TimeLeft = TimeSpan.Zero;
+		}
+
+		InvokeAsync (StateHasChanged);
+	}
+}

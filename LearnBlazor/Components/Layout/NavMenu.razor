@@ -1,0 +1,367 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">@ApplicationName</a>
+		<div class="d-none d-xl-flex">
+			<Button Type="ButtonType.Button" Color="ButtonColor.Secondary" Outline="true" Class="shadow-none" @onclick="ToggleExpand">
+				<Icon Name="IconName.ArrowsCollapse" />
+			</Button>
+		</div>
+	</div>
+</div>
+
+<input id="menuToggler" type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable"> @* onclick="document.querySelector('.navbar-toggler').click()"> *@
+	<nav class="nav flex-column">
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (SampleMenu))" style="cursor: pointer;" aria-expanded="@SampleMenu">
+				<span class="bi @(SampleMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Sample Components
+			</a>
+
+			<_Condition Evaluation="SampleMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+							<span class="bi bi-house-door-fill fs-5 me-3" aria-hidden="true"></span> Home
+						</NavLink>
+					</div>
+
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="counter">
+							<span class="bi bi-plus-square-fill fs-5 me-3" aria-hidden="true" ></span> Counter
+						</NavLink>
+					</div>
+
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="weather">
+							<span class="bi bi-cloud-drizzle fs-5 me-3" aria-hidden="true"></span> Weather
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (BindingMenu))" style="cursor: pointer;" aria-expanded="@BindingMenu">
+				<span class="bi @(BindingMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Blazor Binding Examples
+			</a>
+
+			<_Condition Evaluation="BindingMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/bindProp">
+							<span class="bi bi-bounding-box-circles fs-5 me-3" aria-hidden="true"></span> Bind Property
+						</NavLink>
+					</div>
+
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/demoProduct">
+							<span class="bi bi-backpack2-fill fs-5 me-3" aria-hidden="true"></span> Demo Product
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (ParameterMenu))" style="cursor: pointer;" aria-expanded="@ParameterMenu">
+				<span class="bi @(ParameterMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Parameter Examples
+			</a>
+
+			<_Condition Evaluation="ParameterMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link align-middle" href="learnBlazor/parentComponent">
+							<span class="bi bi-back fs-5 me-3"></span> Example 1
+						</NavLink>
+					</div>
+
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/anotherParent">
+							<span class="bi bi-back fs-5 me-3" aria-hidden="true"></span> Example 2
+						</NavLink>
+					</div>
+
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/learnRouting#targetElement" Match="NavLinkMatch.All">
+							<span class="bi bi-router-fill fs-5 me-3" aria-hidden="true"></span> Routing
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (StateMenu))" style="cursor: pointer;" aria-expanded="@StateMenu">
+				<span class="bi @(StateMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> State Management
+			</a>
+
+			<_Condition Evaluation="StateMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/counterLocalState">
+							<span class="bi bi-device-ssd fs-5 me-3" aria-hidden="true"></span> Local
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/counterLocalStorage">
+							<span class="bi bi-device-ssd fs-5 me-3" aria-hidden="true"></span> Browser Local Storage
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/counterSessionStorage">
+							<span class="bi bi-device-ssd fs-5 me-3" aria-hidden="true"></span> Browser Session Storage
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/counterPersistentState">
+							<span class="bi bi-device-ssd fs-5 me-3" aria-hidden="true"></span> Persistent State
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (InteropMenu))" style="cursor: pointer;" aria-expanded="@InteropMenu">
+				<span class="bi @(InteropMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> JS Interop Example
+			</a>
+
+			<_Condition Evaluation="InteropMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/blazorJS">
+							<span class="bi bi-javascript fs-5 me-3" aria-hidden="true"></span> Example 1
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (LifeCycleMenu))" style="cursor: pointer;" aria-expanded="@LifeCycleMenu">
+				<span class="bi @(LifeCycleMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Life Cycle Example
+			</a>
+
+			<_Condition Evaluation="LifeCycleMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/lifeCycle">
+							<span class="bi bi-activity fs-5 me-3" aria-hidden="true"></span> Example 1
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (FormMenu))" style="cursor: pointer;" aria-expanded="@FormMenu">
+				<span class="bi @(FormMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Form Example
+			</a>
+
+			<_Condition Evaluation="FormMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/blazorForms">
+							<span class="bi bi-input-cursor fs-5 me-3" aria-hidden="true"></span> Blazor Forms
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (LearnMenu))" style="cursor: pointer;" aria-expanded="@LearnMenu">
+				<span class="bi @(LearnMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Microsoft Learn
+			</a>
+
+			<_Condition Evaluation="LearnMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/toDo">
+							<span class="bi bi-check2-square fs-5 me-3" aria-hidden="true"></span> To Do
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/componentRef">
+							<span class="bi bi-bezier2 fs-5 me-3" aria-hidden="true"></span> Component Referencing
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (TimerMenu))" style="cursor: pointer;" aria-expanded="@TimerMenu">
+				<span class="bi @(TimerMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Timer Examples
+			</a>
+
+			<_Condition Evaluation="TimerMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/countdownHours">
+							<span class="bi bi-alarm fs-5 me-3" aria-hidden="true"></span> Example 1
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/countdownDate">
+							<span class="bi bi-alarm fs-5 me-3" aria-hidden="true"></span> Example 2
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (UploadImageMenu))" style="cursor: pointer;" aria-expanded="@UploadImageMenu">
+				<span class="bi @(UploadImageMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Image Upload Example
+			</a>
+
+			<_Condition Evaluation="UploadImageMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/uploadImage">
+							<span class="bi bi-upload fs-5 me-3" aria-hidden="true"></span> Example 1
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+
+		<div class="nav-item px-3">
+			<a class="nav-link" @onclick="() => ToggleMenu (nameof (YumBlazorMenu))" style="cursor: pointer;" aria-expanded="@YumBlazorMenu">
+				<span class="bi @(YumBlazorMenu ? "bi-chevron-double-up" : "bi-chevron-double-down") fs-5 me-3" aria-hidden="true"></span> Yum Blazor
+			</a>
+
+			<_Condition Evaluation="YumBlazorMenu">
+				<True>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="learnBlazor/temp">
+							<span class="bi bi-input-cursor fs-5 me-3" aria-hidden="true"></span> Example
+						</NavLink>
+					</div>
+				</True>
+			</_Condition>
+		</div>
+	</nav>
+</div>
+
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@code {
+	[PersistentState]
+	public bool SampleMenu { get; set; }
+
+	[PersistentState]
+	public bool BindingMenu { get; set; }
+
+	[PersistentState]
+	public bool ParameterMenu { get; set; }
+
+	[PersistentState]
+	public bool InteropMenu { get; set; }
+
+	[PersistentState]
+	public bool LifeCycleMenu { get; set; }
+
+	[PersistentState]
+	public bool FormMenu { get; set; }
+
+	[PersistentState]
+	public bool StateMenu { get; set; }
+
+	[PersistentState]
+	public bool LearnMenu { get; set; }
+
+	[PersistentState]
+	public bool TimerMenu { get; set; }
+
+	[PersistentState]
+	public bool UploadImageMenu { get; set; }
+
+	[PersistentState]
+	public bool YumBlazorMenu { get; set; }
+
+	private bool _expandAll = false;
+
+	protected override void OnInitialized ()
+		=> ToggleMenu (null);
+
+	private void ToggleMenu (string? optionName)
+	{
+		if (optionName == "SampleMenu")
+			SampleMenu = !SampleMenu;
+		else if (optionName == "BindingMenu")
+			BindingMenu = !BindingMenu;
+		else if (optionName == "ParameterMenu")
+			ParameterMenu = !ParameterMenu;
+		else if (optionName == "InteropMenu")
+			InteropMenu = !InteropMenu;
+		else if (optionName == "LifeCycleMenu")
+			LifeCycleMenu = !LifeCycleMenu;
+		else if (optionName == "FormMenu")
+			FormMenu = !FormMenu;
+		else if (optionName == "StateMenu")
+			StateMenu = !StateMenu;
+		else if (optionName == "LearnMenu")
+			LearnMenu = !LearnMenu;
+		else if (optionName == "TimerMenu")
+			TimerMenu = !TimerMenu;
+		else if (optionName == "UploadImageMenu")
+			UploadImageMenu = !UploadImageMenu;
+		else if (optionName == "YumBlazorMenu")
+			YumBlazorMenu = !YumBlazorMenu;
+		else
+		{
+			if (
+				!SampleMenu &&
+				!BindingMenu &&
+				!ParameterMenu &&
+				!InteropMenu &&
+				!LifeCycleMenu &&
+				!FormMenu &&
+				!StateMenu &&
+				!LearnMenu &&
+				!TimerMenu &&
+				!UploadImageMenu &&
+				!YumBlazorMenu)
+				SampleMenu = true;
+		}
+	}
+
+	private void ToggleExpand ()
+	{
+		if (!_expandAll)
+		{
+			BindingMenu = true;
+			ParameterMenu = true;
+			InteropMenu = true;
+			LifeCycleMenu = true;
+			FormMenu = true;
+			StateMenu = true;
+			LearnMenu = true;
+			TimerMenu = true;
+			UploadImageMenu = true;
+			YumBlazorMenu = true;
+		}
+		else
+		{
+			BindingMenu = false;
+			ParameterMenu = false;
+			InteropMenu = false;
+			LifeCycleMenu = false;
+			FormMenu = false;
+			StateMenu = false;
+			LearnMenu = false;
+			TimerMenu = false;
+			UploadImageMenu = false;
+			YumBlazorMenu = false;
+		}
+
+		_expandAll = !_expandAll;
+	}
+
+	private async Task ToggleMenu ()
+		=> await JSRuntime.InvokeVoidAsync ("sidebar.toggle");
+}

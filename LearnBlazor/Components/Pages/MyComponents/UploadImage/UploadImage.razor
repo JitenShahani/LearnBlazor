@@ -1,0 +1,105 @@
+﻿<PageTitle>Upload Images</PageTitle>
+
+<h1>Upload Images</h1>
+
+<div class="mb-3">
+	<div class="form-group">
+		<InputFile id="fileInput"
+			class="form-control shadow-none"
+			OnChange="@LoadFiles"
+			multiple
+			accept=".jpeg, .jpg, .png" />
+	</div>
+</div>
+
+<_Condition Evaluation="_filesToUpload!.Any()">
+	<True>
+		<h3>Files to be uploaded</h3>
+		<ul>
+			<_Iterator Items="_filesToUpload" Context="file">
+				<li>@file.Name (@(file.Size / 1024) KB)</li>
+			</_Iterator>
+		</ul>
+
+		<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" @onclick="UploadFiles">Upload Files</Button>
+	</True>
+</_Condition>
+
+<_Condition Evaluation="_errors.Any()">
+	<True>
+		<h2>Error(s)</h2>
+
+		<_Iterator Items="_errors" Context="error">
+			<Alert Color="AlertColor.Danger" Dismissable="true">
+				<p class="p-0 m-0">@error</p>
+			</Alert>
+		</_Iterator>
+	</True>
+</_Condition>
+
+<_Condition Evaluation="_status.Any()">
+	<True>
+		<_Iterator Items="_status" Context="status">
+			<Alert Color="AlertColor.Success" Dismissable="true">
+				<p class="p-0 m-0">@status</p>
+			</Alert>
+		</_Iterator>
+	</True>
+</_Condition>
+
+@page "/learnBlazor/uploadImage"
+@inject IConfiguration Config
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+@code {
+	private List<IBrowserFile>? _filesToUpload = [];
+	private readonly int _maxFilesAllowed = 3;
+	private readonly int _maxFileSize = 1024 * 1024 * 1; // 1 MB
+	private List<string> _errors = [];
+	private List<string> _status = [];
+
+	private void LoadFiles (InputFileChangeEventArgs e)
+	{
+		_filesToUpload = e.GetMultipleFiles ().ToList ();
+	}
+
+	private async Task UploadFiles ()
+	{
+		_errors.Clear ();
+		_status.Clear ();
+
+		if (_filesToUpload?.Count() > _maxFilesAllowed)
+			_errors.Add ($"Error : Attempting to upload {_filesToUpload.Count()} files, but only {_maxFilesAllowed} files are allowed.");
+
+		foreach (var file in _filesToUpload!)
+		{
+			if (file.Size > _maxFileSize)
+			{
+				_errors.Add ($"Error : File : {file.Name} exceeds maximum allowed size of {_maxFileSize / (1024 * 1024)} MB.");
+				continue;
+			}
+
+			try
+			{
+				var newFileName = Path.ChangeExtension (Path.GetRandomFileName (), Path.GetExtension (file.Name));
+				var path = Path.Combine (Config["FileStorage"]!, "learnBlazor");
+
+				if (!Directory.Exists (path))
+					Directory.CreateDirectory (path);
+
+				using FileStream fileStream = new (Path.Combine (path, newFileName), FileMode.Create);
+				await file.OpenReadStream (_maxFileSize).CopyToAsync (fileStream);
+
+				_status.Add ($"File : {file.Name} uploaded successfully as {newFileName}");
+			}
+			catch (Exception ex)
+			{
+				_errors.Add ($"File : {file.Name} Error : {ex.Message}");
+			}
+		}
+
+		_filesToUpload?.Clear ();
+		await JSRuntime.InvokeVoidAsync ("eval", "document.getElementById('fileInput').value = '';");
+		await InvokeAsync (StateHasChanged);
+	}
+}

@@ -1,0 +1,46 @@
+﻿<div class="bg-secondary-subtle rounded p-3 mb-2">
+	<h4 class="mb-3">Child Component</h4>
+
+	<div class="alert alert-info">
+		@Title
+	</div>
+
+	@if (SomeChildContent is not null)
+	{
+		<div class="alert alert-success">
+			@SomeChildContent
+		</div>
+	}
+
+	@if (ChildContent is not null)
+	{
+		<div class="alert alert-success">
+			@ChildContent
+		</div>
+	}
+
+	<_GrandChildComponent  />
+
+	<button class="btn btn-danger" @onclick="OnButtonCick">Click Me</button>
+</div>
+
+@inject IJSRuntime JSRuntime
+@code {
+	[Parameter]
+	public string Title { get; set; } = string.Empty;
+
+	[Parameter]
+	public RenderFragment? SomeChildContent { get; set; }
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public EventCallback OnButtonCick { get; set; }
+
+	public async Task ShowToastrSuccess ()
+		=> await JSRuntime.ToastrSuccess ("Success", "Operation completed successfully!");
+
+	public async Task ShowSweetAlertSuccess ()
+		=> await JSRuntime.SweetAlertSuccess ("Success", "Operation completed successfully!");
+}

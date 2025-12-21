@@ -1,0 +1,43 @@
+﻿<h4 class="mb-2 text-center">Child Component (Count: @CountValue)</h4>
+<hr />
+
+<_Iterator Items="_eventType" Context="eventName">
+	<p>@eventName</p>
+	<hr />
+</_Iterator>
+
+@code {
+	private List<string> _eventType = [];
+
+	[Parameter]
+	public int CountValue { get; set; } = 0;
+
+	protected override void OnInitialized ()
+	{
+		_eventType.Add ("Child - OnInitialized invoked");
+		base.OnInitialized ();
+	}
+
+	protected override void OnParametersSet()
+	{
+		_eventType.Add ("Child - OnParametersSet invoked");
+		base.OnParametersSet();
+	}
+
+	protected override void OnAfterRender (bool firstRender)
+	{
+		if (firstRender)
+		{
+			_eventType.Add ("Child - OnAfterRender : firstRender invoked");
+		}
+
+		_eventType.Add ("Child - OnAfterRender invoked");
+		base.OnAfterRender (firstRender);
+	}
+
+	protected override bool ShouldRender()
+	{
+		_eventType.Add ("Child - ShouldRender invoked");
+		return true;
+	}
+}

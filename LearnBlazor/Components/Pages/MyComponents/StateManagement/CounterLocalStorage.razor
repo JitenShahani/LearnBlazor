@@ -1,0 +1,42 @@
+﻿<PageTitle>Counter</PageTitle>
+
+<_InfoBox HeaderText="Counter - Manage State using Browser's Local Storage">
+	<Body>
+		<p>
+			Here, state is stored in the browser’s Local Storage, which persists even after the browser is closed and reopened. The counter value is saved as a key/value pair, and retrieved whenever the component loads.
+		</p>
+		<p>
+			Best for: Long‑lived state that should survive browser restarts (e.g., user preferences, theme selection).
+		</p>
+	</Body>
+</_InfoBox>
+
+<p role="status">Current count: @_currentCount</p>
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" @onclick="IncrementCount">
+	<Icon Name="IconName.ArrowUp" />
+	Click Me
+</Button>
+
+@page "/learnBlazor/counterLocalStorage"
+@rendermode InteractiveServer
+@inject ProtectedLocalStorage LocalStore
+@code {
+	private int _currentCount = 0;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var counterValue = await LocalStore.GetAsync<int> ("counterValue");
+			_currentCount = counterValue.Success ? counterValue.Value : 0;
+			await InvokeAsync (StateHasChanged);
+		}
+	}
+
+	private async Task IncrementCount ()
+	{
+		_currentCount++;
+		await LocalStore.SetAsync ("counterValue", _currentCount);
+	}
+}

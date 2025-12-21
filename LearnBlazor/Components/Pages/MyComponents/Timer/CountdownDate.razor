@@ -1,0 +1,48 @@
+﻿<PageTitle>Countdown Timer Date</PageTitle>
+
+<div style="height: calc(100vh - 74px);" class="d-flex justify-content-center align-items-center">
+	<form>
+		<div class="text-center fs-1">
+			<label for="birthDate" class="form-label">Birth Date : </label>
+			<input type="datetime" id="birthDate" class="form-text text-center" style="width: 30%;" @bind="_targetDateTime" disabled />
+		</div>
+
+		<span class="fw-bold" style="font-size: 65px; color: var(--body-color)">
+			@TimeLeft!.Value.Days Days
+			@TimeLeft!.Value.Hours Hours
+			@TimeLeft!.Value.Minutes Minutes
+			@TimeLeft!.Value.Seconds Seconds
+		</span>
+	</form>
+</div>
+
+@page "/learnBlazor/countdownDate"
+@rendermode InteractiveServer
+@code {
+	[PersistentState]
+	public Timer? Timer { get; set; }
+
+	[PersistentState]
+	public TimeSpan? TimeLeft { get; set; }
+
+	private DateTime _targetDateTime = new DateTime (2026, 05, 18, 18, 00, 00);
+
+	protected override void OnInitialized ()
+	{
+		TimeLeft ??= _targetDateTime - DateTime.Now;
+
+		Timer ??= new (1000);
+		Timer.Elapsed += TimerElapsed;
+		Timer.Start ();
+	}
+
+	private void TimerElapsed (object? sender, ElapsedEventArgs e)
+	{
+		TimeLeft = _targetDateTime - DateTime.Now;
+
+		if (_targetDateTime <= DateTime.Now)
+			Timer?.Stop ();
+
+		InvokeAsync (StateHasChanged);
+	}
+}

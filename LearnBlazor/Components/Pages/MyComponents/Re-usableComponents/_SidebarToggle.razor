@@ -1,0 +1,8 @@
+﻿@rendermode InteractiveServer
+@inject SidebarState SidebarState
+
+@SidebarState.Width
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" Class="shadow-none" @onclick="SidebarState.Toggle">
+	<Icon Name="IconName.ArrowsCollapseVertical" />
+</Button>

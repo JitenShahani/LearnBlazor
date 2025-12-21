@@ -1,0 +1,85 @@
+﻿<_Condition Evaluation="ContactsVisible">
+	<True>
+		<div class="row g-1">
+			<_Iterator Items="_contacts" Context="contact">
+				<_InfoBox HeaderText="@contact.Name" IsColumn="true" ColumnCount="2">
+					<Body>
+						<table class="w-100 table table-responsive table-borderless">
+							<tbody>
+								<tr>
+									<td class="bg-transparent" style="width: 18% !important;">Team : </td>
+									<td class="bg-transparent">@contact.Team</td>
+								</tr>
+								<tr>
+									<td class="bg-transparent">Country : </td>
+									<td class="bg-transparent">@contact.Country</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row mt-2">
+							<Button Type="ButtonType.Button"
+									Color="ButtonColor.Danger"
+									Outline="true"
+									Class="shadow-none"
+									@onclick="(() => DeleteContact (contact))">
+								Delete
+							</Button>
+						</div>
+					</Body>
+				</_InfoBox>
+			</_Iterator>
+		</div>
+	</True>
+</_Condition>
+
+<div class="mb-5"></div>
+
+<_DeleteConfirmation ShowPopup="@_showDeleteModal"
+	BodyContent="@_deleteBodyContent"
+	ContactToDelete="@_contactToDelete"
+	OnConfirmed="HideConfirmation" />
+
+@inject ContactService Service
+@code {
+	[Parameter]
+	public bool ContactsVisible { get; set; }
+
+	private List<Contact>? _contacts;
+
+	private bool _showDeleteModal = false;
+	private string _deleteBodyContent = string.Empty;
+	private Contact? _contactToDelete;
+
+	protected override void OnInitialized ()
+	{
+		_contacts = Service.GetContacts ().ToList ();
+		base.OnInitialized ();
+	}
+
+	public void ShowContacts ()
+	{
+		ContactsVisible = true;
+		InvokeAsync (StateHasChanged);
+	}
+
+	public void HideContacts ()
+	{
+		ContactsVisible = false;
+		InvokeAsync (StateHasChanged);
+	}
+
+	private async Task DeleteContact (Contact contact)
+	{
+		_deleteBodyContent = $"Are you sure you want to delete {contact.Name}?";
+		_contactToDelete = contact;
+		_showDeleteModal = true;
+		await InvokeAsync (StateHasChanged);
+	}
+
+	private async Task HideConfirmation (Contact contact)
+	{
+		_showDeleteModal = false;
+		_contacts?.Remove (contact);
+		await InvokeAsync (StateHasChanged);
+	}
+}

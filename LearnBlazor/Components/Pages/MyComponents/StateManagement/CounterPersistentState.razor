@@ -1,0 +1,45 @@
+﻿<PageTitle>Counter</PageTitle>
+
+<_InfoBox HeaderText="Counter - Manage State using Persistent State.">
+	<Body>
+		<p>
+			Starting with .NET 9 and significantly improved in .NET 10, Blazor introduces Persistent Component State. This feature allows you to preserve state across pre‑rendering, hydration, and even disconnections in Blazor Server. The counter value can be serialized and restored automatically, ensuring a seamless user experience even when the connection drops or the page is reloaded.
+		</p>
+		<p>
+			However, if you want the value to persist between page visits or across different components, you’ll need to maintain that state separately (for example, in a scoped service or browser storage). Persistent Component State focuses on continuity during prerendering, hydration, and reconnection, not long‑term persistence across navigation.
+		</p>
+		<p>
+			Best for: Reliable state persistence in Blazor Server apps, especially when dealing with prerendering, hydration, and reconnection scenarios.
+		</p>
+		<p>
+			For demo purposes, you can simulate disconnection and reconnection directly from the browser console
+			using the following commands:
+		</p>
+		<pre class="p-0 m-0">
+			<code class="language-javascript">
+Blazor.pauseCircuit();
+Blazor.resumeCircuit();
+			</code>
+		</pre>
+	</Body>
+</_InfoBox>
+
+<p role="status">Current count: @CurrentCount</p>
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" @onclick="IncrementCount">
+	<Icon Name="IconName.ArrowUp" />
+	Click Me
+</Button>
+
+@page "/learnBlazor/counterPersistentState"
+@rendermode InteractiveServer
+@inject CounterService CounterService
+@code {
+	[PersistentState]
+	public int CurrentCount { get; set; }
+
+	private void IncrementCount ()
+	{
+		CurrentCount++;
+	}
+}

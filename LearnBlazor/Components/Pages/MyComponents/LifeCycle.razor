@@ -1,0 +1,127 @@
+﻿<PageTitle>Life Cycle</PageTitle>
+
+<h3>Blazor Life Cycle</h3>
+
+<p role="status">Current count: @CurrentCount</p>
+
+<button class="btn btn-outline-primary shadow-none" @onclick="IncrementCount">
+	<Icon Name="IconName.PatchPlus" Class="me-1" />
+	Click me
+</button>
+
+<div class="row gap-2 mt-3">
+	<div class="col bg-primary-subtle rounded p-3">
+		<h4 class="text-center">Events</h4>
+		<hr />
+
+		<_Iterator Items="_eventType" Context="eventName">
+			<p>@eventName</p>
+			<hr />
+		</_Iterator>
+	</div>
+
+	<div class="col bg-secondary-subtle rounded p-3">
+		<_LifeCycleChildComponent CountValue="@CurrentCount" />
+	</div>
+
+	<div class="col bg-info-subtle rounded p-3">
+		<h4 class="text-center">State Has Changed Example</h4>
+		<hr />
+
+		<p>Count: @_count</p>
+
+		<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" Class="shadow-none mb-3" @onclick="StartCountDown">Start Countdown</Button>
+
+		<div class="mt-2">
+			<_Condition Evaluation="_count == 5" ElseIfs="@ElseIfs" >
+				<True>
+					<p>The value of _count field is 5.</p>
+				</True>
+
+				<False>
+					<p>The value of _count field is niether 5 nor 0.</p>
+				</False>
+			</_Condition>
+		</div>
+	</div>
+</div>
+
+@page "/learnBlazor/lifeCycle"
+@rendermode InteractiveServer
+@code {
+	private int _count = 5;
+	private List<string> _eventType = [];
+	private IEnumerable<(bool Condition, RenderFragment Content)> ElseIfs => [
+		(_count == 0, @<p>The value of _count field is 0.</p>),
+		(_count == 3, @<p>The value of _count field is 3.</p>)
+	];
+
+	[PersistentState]
+	public int CurrentCount { get; set; }
+
+
+	private async Task IncrementCount ()
+		=> CurrentCount++;
+
+	private void StartCountDown ()
+	{
+		System.Threading.Timer timer = new (TimeCallBack!, null, 1000, 1000);
+	}
+
+	private void TimeCallBack (object state)
+	{
+		if (_count > 0)
+		{
+			_count--;
+			InvokeAsync (StateHasChanged);
+		}
+	}
+
+	protected override void OnInitialized ()
+	{
+		_eventType.Add ("OnInitialized invoked");
+		base.OnInitialized ();
+	}
+
+	protected override async Task OnInitializedAsync ()
+	{
+		// await Task.Delay (500);
+		_eventType.Add ("OnInitializedAsync invoked");
+	}
+
+	protected override void OnParametersSet ()
+	{
+		_eventType.Add ("OnParametersSet invoked");
+		base.OnParametersSet ();
+	}
+
+	protected override Task OnParametersSetAsync ()
+	{
+		_eventType.Add ("OnParametersSetAsync invoked");
+		return base.OnParametersSetAsync ();
+	}
+
+	protected override void OnAfterRender (bool firstRender)
+	{
+		if (firstRender)
+			_eventType.Add ("OnAfterRender : firstRender invoked");
+
+		_eventType.Add ("OnAfterRender invoked");
+		base.OnAfterRender (firstRender);
+	}
+
+	protected override Task OnAfterRenderAsync (bool firstRender)
+	{
+		if (firstRender)
+			_eventType.Add ("OnAfterRenderAsync : firstRender invoked");
+
+		_eventType.Add ("OnAfterRenderAsync invoked");
+		return base.OnAfterRenderAsync (firstRender);
+	}
+
+	protected override bool ShouldRender ()
+	{
+		_eventType.Add ("ShouldRender invoked");
+		return true;
+	}
+}

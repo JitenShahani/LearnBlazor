@@ -1,0 +1,67 @@
+﻿<PageTitle>Blazor JS</PageTitle>
+
+<h3 class="mb-3">Blazor JS</h3>
+
+<div class="row mb-3">
+	<button class="btn btn-secondary shadow-none me-2 mb-2 w-auto" @onclick="TestConfirmBox">Test Confirm Button</button>
+
+	<button class="btn btn-info shadow-none me-2 mb-2 w-auto" @onclick="ShowToastrInfo">Toastr Info</button>
+	<button class="btn btn-success shadow-none me-2 mb-2 w-auto" @onclick="ShowToastrSuccess">Toastr Success</button>
+	<button class="btn btn-warning shadow-none me-2 mb-2 w-auto" @onclick="ShowToastrWarning">Toastr Warning</button>
+	<button class="btn btn-danger shadow-none me-2 mb-2 w-auto" @onclick="ShowToastrFailure">Toastr Failure</button>
+
+	<button class="btn btn-info shadow-none me-2 mb-2 w-auto" @onclick="ShowSweetAlertInfo">Sweet Alert Info</button>
+	<button class="btn btn-success shadow-none me-2 mb-2 w-auto" @onclick="ShowSweetAlertSuccess">Sweet Alert Success</button>
+	<button class="btn btn-secondary shadow-none me-2 mb-2 w-auto" @onclick="ShowSweetAlertQuestion">Sweet Alert Question</button>
+	<button class="btn btn-warning shadow-none me-2 mb-2 w-auto" @onclick="ShowSweetAlertWarning">Sweet Alert Warning</button>
+	<button class="btn btn-danger shadow-none me-2 mb-2 w-auto" @onclick="ShowSweetAlertFailure">Sweet Alert Failure</button>
+</div>
+
+<div class="row">
+	<_Condition Evaluation="_confirmed">
+		<True>
+			<p class="mb-2">Confirmation has been made!</p>
+		</True>
+		<False>
+			<p>Pending Confirmation.</p>
+		</False>
+	</_Condition>
+</div>
+
+@page "/learnBlazor/blazorJS"
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@code {
+	private string _confirmMessage = "Are you sure you want to delete?";
+	private bool _confirmed;
+
+	private async Task TestConfirmBox ()
+		=> _confirmed = await JSRuntime.InvokeAsync<bool> ("confirm", _confirmMessage);
+
+	private async Task ShowToastrInfo ()
+		=> await JSRuntime.ToastrInfo ("Info", "This is an informational message.");
+
+	private async Task ShowToastrSuccess ()
+		=> await JSRuntime.ToastrSuccess ("Success", "Operation completed successfully!");
+
+	private async Task ShowToastrWarning ()
+		=> await JSRuntime.ToastrWarning ("Warning", "This is a warning message.");
+
+	private async Task ShowToastrFailure ()
+		=> await JSRuntime.ToastrError ("Failure", "Operation failed!");
+
+	private async Task ShowSweetAlertInfo ()
+		=> await JSRuntime.SweetAlertInfo ("Info", "This is an informational alert.");
+
+	private async Task ShowSweetAlertSuccess ()
+		=> await JSRuntime.SweetAlertSuccess ("Success", "Operation completed successfully!");
+
+	private async Task ShowSweetAlertQuestion ()
+		=> _confirmed = await JSRuntime.SweetAlertQuestion ("Question", "Would you like to delete current record?", "Cancel", "Delete");
+
+	private async Task ShowSweetAlertWarning ()
+		=> await JSRuntime.SweetAlertWarning ("Warning", "This is a warning alert.");
+
+	private async Task ShowSweetAlertFailure ()
+		=> await JSRuntime.SweetAlertError ("Failure", "Operation failed!");
+}

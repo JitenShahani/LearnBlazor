@@ -1,0 +1,50 @@
+﻿<div class="@GetGridClass() @(IsColumn ? "" : "mb-3") @Class">
+	<div class="p-2 rounded-3" style="background-color: var(--body-color)">
+		<div class="p-2 mb-2 rounded-3 text-white" style="background-color: var(--header-color)">
+			<h3 class="m-0 text-center">@HeaderText</h3>
+		</div>
+		@if (Body is not null)
+		{
+			<div class="p-2 fw-semibold">
+				@Body
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string? HeaderText { get; set; }
+
+	[Parameter]
+	public RenderFragment? Body { get; set; }
+
+	[Parameter]
+	public string? Class { get; set; }
+
+	[Parameter]
+	public bool IsColumn { get; set; } = false;
+
+	[Parameter]
+	public int ColumnCount { get; set; } = 1;
+
+	private string GetGridClass ()
+	{
+		if (!IsColumn) return "";
+
+		int columnWidth = ColumnCount switch
+		{
+			1 => 12,
+			2 => 6,
+			3 => 4,
+			4 => 3,
+			6 => 2,
+			12 => 1,
+			_ => 12
+		};
+
+		return IsColumn
+			? $"col-{columnWidth}"
+			: "";
+	}
+}

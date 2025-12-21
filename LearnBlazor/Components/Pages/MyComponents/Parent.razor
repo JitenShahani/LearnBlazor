@@ -1,0 +1,61 @@
+﻿<PageTitle>Parent Component</PageTitle>
+
+<h3 class="mb-3">Parent Component</h3>
+
+<CascadingValue Name="MessageForGrandChild" Value="@_messageForGrandChild">
+	<CascadingValue Name="LuckyNumber" Value="@_luckyNumber">
+		<_ChildComponent Title="This title is passed as a parameter from parent component." OnButtonCick="ShowMessage" @ref="_child">
+			<SomeChildContent>
+				This is content inside SomeChildContent tag from Parent Component.
+			</SomeChildContent>
+			<ChildContent>
+				This is content inside ChildContent tag from Parent Component.
+			</ChildContent>
+		</_ChildComponent>
+
+		<_ChildComponent Title="This title is passed as a parameter from parent component." OnButtonCick="ShowMessage" @ref="_child">
+			<ChildContent>
+				This is content inside ChildContent tag from Parent Component.
+			</ChildContent>
+		</_ChildComponent>
+	</CascadingValue>
+</CascadingValue>
+
+@if (_showSpinner)
+{
+	<div class="spinner-border text-primary" role="status"></div>
+}
+
+@if (!string.IsNullOrWhiteSpace (_messageText))
+{
+	<p class="mt-2">@_messageText</p>
+}
+
+<div class="row my-2">
+	<button class="btn btn-success shadow-none w-auto me-2" @onclick="() => _child!.ShowToastrSuccess()">Show Toastr</button>
+	<button class="btn btn-success shadow-none w-auto" @onclick="() => _child!.ShowSweetAlertSuccess()">Show Sweet Alert</button>
+</div>
+
+@page "/learnBlazor/parentComponent"
+@rendermode InteractiveServer
+@code {
+	private string _messageText = string.Empty;
+	private bool _showSpinner = false;
+	private string _messageForGrandChild = "This message is passed from Parent Component to Grand Child";
+	private int _luckyNumber = 3;
+
+	private _ChildComponent? _child;
+
+	private async Task ShowMessage ()
+	{
+		_messageText = string.Empty;
+		_showSpinner = true;
+		await InvokeAsync (StateHasChanged);
+
+		await Task.Delay (TimeSpan.FromSeconds (1));
+
+		_messageText = "Button clicked in Child Component!";
+		_showSpinner = false;
+		await InvokeAsync (StateHasChanged);
+	}
+}

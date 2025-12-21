@@ -1,0 +1,59 @@
+﻿<PageTitle>Another Parent/Child Example</PageTitle>
+
+<h3 class="mb-3">Parent/Child Example</h3>
+
+<div>
+	<Button Type="ButtonType.Button"
+			Color="ButtonColor.Primary"
+			Outline="true"
+			Class="mb-3 shadow-none"
+			@onclick="AddComponent">
+		Add Component
+	</Button>
+
+	<br />
+
+	<label for="deleteComponent" class="form-label">Component To Delete: </label>
+	<InputText class="mx-2 shadow-none" @bind-Value="_messageText" />
+
+	<Button Type="ButtonType.Button"
+			Color="ButtonColor.Danger"
+			Outline="true"
+			Class="mb-3 shadow-none"
+			@onclick="DeleteComponent">
+		Delete Component
+	</Button>
+</div>
+
+<_Iterator Items="_messages" Context="message">
+	<_AnotherChildComponent Message="@message" OnCloseRequested="CloseRequested" />
+</_Iterator>
+
+@page "/learnBlazor/anotherParent"
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@code {
+	private List<string> _messages = [];
+	private int _counter = 0;
+	private string _messageText = string.Empty;
+
+	private void AddComponent ()
+	{
+		_counter++;
+		string Message = $"Component {_counter}";
+		_messages.Add (Message);
+	}
+
+	void DeleteComponent ()
+	{
+		if (!string.IsNullOrWhiteSpace(_messageText))
+		{
+			var component = _messages.FirstOrDefault (m => m.Contains (_messageText));
+			_messages.Remove (component!);
+			_messageText = string.Empty;
+		}
+	}
+
+	private void CloseRequested (string Message)
+		=> _messages.Remove (Message);
+}

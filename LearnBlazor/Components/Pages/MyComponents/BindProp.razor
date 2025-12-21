@@ -1,0 +1,247 @@
+﻿<PageTitle>@_pageTitle</PageTitle>
+
+<h3>@_pageTitle</h3>
+
+<div class="row">
+	<div class="card shadow-sm mb-3">
+		<div class="card-header text-center">
+			<h2 class="m-0">Product Details</h2>
+		</div>
+		<div class="card-body">
+			<div class="row py-1">
+				<div class="col-2 border-end">Name: </div>
+				<div class="col-3">@_product.Name</div>
+			</div>
+			<div class="row py-1">
+				<div class="col-2 border-end">Price:	</div>
+				<div class="col-3">@(_product.Price.ToString("C2"))</div>
+			</div>
+			<div class="row py-1">
+				<div class="col-2 border-end">IsActive: </div>
+				<div class="col-3">@_product.IsActive</div>
+			</div>
+			<div class="row py-1">
+				<div class="col-2 border-end">Product Status: </div>
+				<div class="col-1">@(_product.IsActive == true ? "Active" : "In-Active")</div>
+			</div>
+			<div class="row py-1">
+				<div class="col-2 border-end">Product Property: @_selectedProp</div>
+				@if (!string.IsNullOrWhiteSpace (_selectedProp))
+				{
+					<div class="col-1">@_product.ProductProperties.FirstOrDefault(p => p.Key == _selectedProp)?.Value</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<table class="table table-bordered table-striped table-hover">
+		<thead class="table-light">
+			<tr>
+				<th colspan="3" class="text-center">
+					<h2 class="m-0">Binding Exmaples</h2>
+				</th>
+			</tr>
+			<tr>
+				<th class="text-center" style="width: 10%">Field</th>
+				<th class="text-center" style="width: 15%">Input</th>
+				<th class="text-center">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="align-middle">Price: </td>
+				<td class="align-middle">
+					<input type="number" class="form-control text-end" @bind="_product.Price" @bind:event="oninput" />
+				</td>
+				<td class="align-middle">
+					Binding HTML input (number) element values using <code>bind</code> and <code>bind:event</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Price: </td>
+				<td class="align-middle">
+					<input type="number" class="form-control text-end" @bind-value="_product.Price" @bind-value:event="oninput" />
+				</td>
+				<td class="align-middle">
+					Binding HTML input (number) element values using <code> bind-value </code> and <code> bind-value:event</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Price: </td>
+				<td class="align-middle">
+					<InputNumber TValue="double" class="form-control text-end" @bind-Value="_product.Price" @oninput="(args) => _product.Price = double.Parse(args.Value!.ToString()!)" />
+				</td>
+				<td class="align-middle">
+					Binding Blazor's InputText component values using <code> bind-Value </code> & <code> oninput </code> event.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Active: </td>
+				<td class="align-middle">
+					<div class="form-check form-switch">
+						<input type="checkbox" class="form-check-input" @bind="_product.IsActive" @bind:event="oninput" />
+					</div>
+				</td>
+				<td class="align-middle">
+					Binding HTML input (checkbox) element values using <code> bind </code> and <code> bind:event</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Active: </td>
+				<td class="align-middle">
+					<div class="form-check form-switch">
+						<input type="checkbox" class="form-check-input" @bind-value="_product.IsActive" @bind-value:event="oninput" />
+					</div>
+				</td>
+				<td class="align-middle">
+					<div class="border-bottom pb-1">
+						Binding HTML input (checkbox) element values using <code> bind-value </code> and <code> bind-value:event</code>.
+					</div>
+					<div class="pt-1">
+						When using checkboxes, you cannot automatically link the <code> bind-value </code> to the model's default value. instead, the checkbox's initial state must be set using the checked attribute.
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Active: </td>
+				<td class="align-middle">
+					<div class="form-check form-switch">
+						<input type="checkbox" class="form-check-input" @bind-value="_product.IsActive" checked="@_product.IsActive" />
+					</div>
+				</td>
+				<td class="align-middle">
+					Binding HTML input (checkbox) element values using <code> bind-value </code> and <code> checked </code> attribute to reflect the default model value.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Active: </td>
+				<td class="align-middle">
+					<div class="form-check form-switch">
+						<InputCheckbox TValue="bool?" class="form-check-input" @bind-Value="_product.IsActive" />
+					</div>
+				</td>
+				<td class="align-middle">
+					Binding Blazor's InputCheckbox component values using <code> bind-Value </code> & <code> oninput </code> event.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Properties: </td>
+				<td class="align-middle">
+					<select class="form-select" @bind="_selectedProp">
+						@foreach (var prop in _product.ProductProperties)
+						{
+							<option value="@prop.Key">@prop.Key</option>
+						}
+					</select>
+				</td>
+				<td class="align-middle">
+					Binding HTML select element values using <code> bind</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle">Properties: </td>
+				<td class="align-middle">
+					<InputSelect class="form-select" @bind-Value="_selectedProp">
+						@foreach (var prop in _product.ProductProperties)
+						{
+							<option value="@prop.Key">@prop.Key</option>
+						}
+					</InputSelect>
+				</td>
+				<td class="align-middle">
+					Binding Blazor's InputSelect component values using <code> bind-Value</code>.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table table-bordered table-striped table-hover">
+		<thead>
+			<tr>
+				<th class="text-center" colspan="3">
+					<h2 class="m-0">Product Table</h2>
+				</th>
+			</tr>
+			<tr>
+				<th class="text-center">Product Name</th>
+				<th class="text-center" style="width: 15%;">Price</th>
+				<th class="text-center">Is Active</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var product in _products)
+			{
+				<tr>
+					<td class="align-middle">
+						<InputText class="form-control" @bind-Value="product.Name" @oninput="(args) => product.Name = args.Value!.ToString()!" />
+					</td>
+					<td class="align-middle">
+						<InputNumber TValue="double" class="form-control text-end" @bind-Value="product.Price" @oninput="(args) => product.Price = double.Parse(args.Value!.ToString()!)" />
+					</td>
+					<td class="align-middle">
+						<div class="form-check form-switch">
+							<InputCheckbox TValue="bool?" class="form-check-input" @bind-Value="product.IsActive" />
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<div class="card shadow-sm mb-5">
+		<div class="card-header text-center">
+			<h2 class="m-0">Product Summary</h2>
+		</div>
+		<div class="card-body m-0">
+			<ul class="m-0">
+				@foreach (var product in _products)
+				{
+					<li class="m-0 ps-0">@product.Name [@product.Price.ToString("C2")] @(product.IsActive == true ? "Active" : "In-Active")</li>
+				}
+			</ul>
+		</div>
+	</div>
+</div>
+
+@page "/learnblazor/bindProp"
+@rendermode InteractiveServer
+@code {
+	private string _pageTitle = "Product - Data Binding";
+	private string _selectedProp = string.Empty;
+
+	private Product _product = new ()
+	{
+		Id = 1,
+		Name = "Laptop",
+		Price = 680.99,
+		IsActive = true,
+		ProductProperties =
+			[
+				new Product_Prop { Id = 1, Key = "Model", Value = "LG Gram" },
+				new Product_Prop { Id = 2, Key = "Color", Value = "Black" },
+				new Product_Prop { Id = 3, Key = "Size", Value = "17 inch" },
+				new Product_Prop { Id = 4, Key = "Warranty", Value = "1 Year" }
+			]
+	};
+
+	private List<Product> _products = [];
+
+	protected override void OnInitialized ()
+	{
+		_products =
+			[
+				new() { Id = 1, Name = "Midnight Blaze", IsActive = false, Price = 5.99, ProductProperties =
+					[
+						new() { Id = 1, Key = "Flavor", Value = "Rose" },
+						new() { Id = 2, Key = "Size", Value = "20oz" },
+						new() { Id = 3, Key = "Colour", Value = "Purple" }
+					] },
+				new() { Id = 2, Name = "Blossom Lily", IsActive = true, Price = 10.59, ProductProperties =
+					[
+						new() { Id = 4, Key = "Flavor", Value = "Lily" },
+						new() { Id = 5, Key = "Size", Value = "18oz" },
+						new() { Id = 6, Key = "Colour", Value = "White" }
+					] },
+			];
+	}
+}

@@ -1,0 +1,52 @@
+﻿<PageTitle>@_pageTitle</PageTitle>
+
+<h3>@_pageTitle</h3>
+
+<p>Favorite Count: @_favoriteCount</p>
+<p>Selected Product: @_selectedProp</p>
+
+<div class="row">
+	@foreach (var product in _products)
+	{
+		<_IndividualProduct Product="product" OnFavoriteUpdated="FavoriteCountChange" OnProductSelect="ProductSelected" OnProductDelete="DeleteProduct" />
+	}
+</div>
+
+@page "/learnblazor/demoProduct"
+@rendermode InteractiveServer
+@code {
+	private string _pageTitle = "Demo Product";
+	private List<Product> _products = [];
+	private int _favoriteCount { get; set; } = 0;
+	private string _selectedProp = string.Empty;
+
+	protected override void OnInitialized ()
+	{
+		_products =
+			[
+				new() { Id = 1, Name = "Midnight Blaze", IsActive = false, Price = 5.99, ProductProperties =
+					[
+						new() { Id = 1, Key = "Flavor", Value = "Rose" },
+						new() { Id = 2, Key = "Size", Value = "20oz" },
+						new() { Id = 3, Key = "Colour", Value = "Purple" }
+					] },
+				new() { Id = 2, Name = "Blossom Lily", IsActive = true, Price = 10.59, ProductProperties =
+					[
+						new() { Id = 4, Key = "Flavor", Value = "Lily" },
+						new() { Id = 5, Key = "Size", Value = "18oz" },
+						new() { Id = 6, Key = "Colour", Value = "White" }
+					] },
+	];
+	}
+
+	protected void DeleteProduct (Product product)
+		=> _products.Remove (product);
+
+	protected void FavoriteCountChange (bool isSelected)
+		=> _favoriteCount += isSelected
+			? 1
+			: -1;
+
+	protected void ProductSelected (string productName)
+		=> _selectedProp = productName;
+}

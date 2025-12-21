@@ -1,0 +1,13 @@
+﻿<div class="bg-warning-subtle p-3 mb-3 rounded">
+	<h4 class="mb-3">Grand Child Component</h4>
+	<p class="">This is a message - @MessageForGrandChild</p>
+	<p class="mb-0">Luck Number - @LuckyNumber</p>
+</div>
+
+@code {
+	[CascadingParameter (Name = "MessageForGrandChild")]
+	private string MessageForGrandChild { get; set; } = string.Empty;
+
+	[CascadingParameter (Name = "LuckyNumber")]
+	private int LuckyNumber { get; set; } = 0;
+}

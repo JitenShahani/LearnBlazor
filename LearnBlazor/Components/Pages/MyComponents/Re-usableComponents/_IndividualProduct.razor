@@ -1,0 +1,66 @@
+﻿@if (Product is not null)
+{
+	<div class="col-6 border" @onclick="() => ProductSelect(Product.Name)">
+		<h4 class="text-secondary text-center">Product - @Product.Id</h4>
+
+		<div class="row py-1">
+			<div class="col-3 border-end">Favorite: </div>
+			<div class="col-3">
+				<div class="form-group form-switch">
+					<input type="checkbox" class="form-check-input shadow-none" @onchange="UpdateFavorite" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row py-1">
+			<div class="col-3 border-end">Name: </div>
+			<div class="col-3">@Product.Name</div>
+		</div>
+		<div class="row py-1">
+			<div class="col-3 border-end">Show Properties: </div>
+			<div class="col-3">
+				<div class="form-group form-switch">
+					<InputCheckbox class="form-check-input shadow-none" @bind-Value="Product.IsActive" />
+				</div>
+			</div>
+		</div>
+
+		@if (Product.IsActive)
+		{
+			@foreach (var prop in Product.ProductProperties)
+			{
+				<div class="row py-1">
+					<div class="col-3 border-end">@prop.Key: </div>
+					<div class="col-3">@prop.Value</div>
+				</div>
+			}
+		}
+
+		<_DeleteButton OnDelete="() => ProductDelete(Product)">
+			Delete
+		</_DeleteButton>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public Product? Product { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+	[Parameter]
+	public EventCallback<Product> OnProductDelete { get; set; }
+
+	[Parameter]
+	public EventCallback<string> OnProductSelect { get; set; }
+
+	private async Task UpdateFavorite (ChangeEventArgs args)
+		=> await OnFavoriteUpdated.InvokeAsync ((bool) args.Value!);
+
+	private async Task ProductDelete (Product product)
+		=> await OnProductDelete.InvokeAsync (product);
+
+	private async Task ProductSelect (string productName)
+		=> await OnProductSelect.InvokeAsync (productName);
+}

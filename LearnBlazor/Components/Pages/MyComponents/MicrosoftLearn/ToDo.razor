@@ -1,0 +1,131 @@
+﻿<PageTitle>To Do</PageTitle>
+
+<_Condition Evaluation="ToDos?.Count(t => !t.IsDone) > 0">
+	<True>
+		<h1 class="mb-3">To Do (@(ToDos?.Count(t => !t.IsDone)))</h1>
+	</True>
+	<False>
+		<h1 class="mb-3">To Do</h1>
+	</False>
+</_Condition>
+
+<_Condition Evaluation="ToDos!.Any()">
+	<True>
+		<ul style="list-style-type: none;">
+			<_Iterator Items="ToDos" Context="todo" OrderOn="dueDate">
+				<li>
+					<div class="form-group form-switch mb-1">
+						<input type="checkbox" class="form-check-input shadow-none col  @(Strike(todo.IsDone))" @bind-value="todo.IsDone" />
+						<input type="text" class="col w-75 @(Strike(todo.IsDone))" @bind-value="todo.Title" disabled />
+						<input type="text" class="col @(Strike(todo.IsDone))" @bind-value="todo.DueDate" disabled />
+						<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true" Class="shadow-none" @onclick="@(() => UpdateToDo(todo))">
+							<Icon Name="IconName.Pencil" />
+						</Button>
+						<Button Type="ButtonType.Button" Color="ButtonColor.Danger" Outline="true" Class="shadow-none" @onclick="@(() => DeleteToDo(todo))">
+							<Icon Name="IconName.Trash3" />
+						</Button>
+					</div>
+				</li>
+			</_Iterator>
+		</ul>
+	</True>
+</_Condition>
+
+<EditForm Model="ToDoItem" FormName="todoEntry" Enhance OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInValidSubmit" class="mt-3 w-50 border p-3 rounded mx-auto">
+	<DataAnnotationsValidator />
+
+	<div class="mb-3">
+		<label for="title" class="form-label">Title: </label>
+		<InputText id="title"
+				   class="form-control shadow-none"
+				   @ref="_toDoInput"
+				   @bind-Value="ToDoItem!.Title"
+				   autocomlete="off" />
+		<ValidationMessage For="@(() => ToDoItem.Title)" />
+	</div>
+
+	<div class="mb-3">
+		<label for="dueDate" class="form-label">Due Date: </label>
+		<InputDate TValue="DateOnly?"
+				   id="dueDate"
+				   class="form-control shadow-none"
+				   @bind-Value="ToDoItem.DueDate"
+				   autocomlete="off" />
+		<ValidationMessage For="@(() => ToDoItem.DueDate)" />
+	</div>
+
+	<Button Type="ButtonType.Submit" Color="ButtonColor.Primary" Outline="true">Submit</Button>
+</EditForm>
+
+@page "/learnBlazor/toDo"
+@rendermode InteractiveServer
+@code {
+	[PersistentState]
+	public List<ToDoItem>? ToDos { get; set; }
+
+	[PersistentState]
+	public ToDoItem? ToDoItem { get; set; }
+
+	private DateOnly _dueDate = DateOnly.FromDateTime (DateTime.Now);
+	private InputText? _toDoInput;
+
+	protected override void OnInitialized ()
+	{
+		ResetToDo (true);
+		base.OnInitialized ();
+	}
+
+	protected override async Task OnAfterRenderAsync (bool firstRender)
+	{
+		if (firstRender)
+			await FocusToDoForm ();
+	}
+
+	private string Strike (bool isDone)
+		=> isDone
+			? "opacity-50"   // text-decoration-line-through
+			: "";
+
+	private async Task FocusToDoForm ()
+	{
+		await InvokeAsync (StateHasChanged);
+		await _toDoInput!.Element!.Value.FocusAsync ();
+	}
+
+	private void DeleteToDo (ToDoItem item)
+		=> ToDos?.Remove (item);
+
+	private async Task UpdateToDo (ToDoItem item)
+	{
+		ToDoItem = item;
+		ToDos?.Remove (item);
+		await FocusToDoForm ();
+	}
+
+	private async Task HandleValidSubmit ()
+	{
+		ToDos?.Add (ToDoItem!);
+		ResetToDo (false);
+
+		await Task.Delay (100);
+		await FocusToDoForm ();
+	}
+
+	private async Task HandleInValidSubmit ()
+	{
+		await FocusToDoForm ();
+	}
+
+	private void ResetToDo (bool Initialization)
+	{
+		if (Initialization)
+		{
+			ToDos ??= [];
+			ToDoItem ??= new () { DueDate = DateOnly.FromDateTime (DateTime.Now) };
+		}
+		else
+		{
+			ToDoItem = new () { DueDate = DateOnly.FromDateTime (DateTime.Now) };
+		}
+	}
+}

@@ -1,0 +1,33 @@
+﻿<PageTitle>Component Referencing</PageTitle>
+
+<h1>Component Referencing </h1>
+
+<Button
+	Type="ButtonType.Button"
+	Color="ButtonColor.Primary"
+	Outline="true"
+	Class="mb-3 shadow-none"
+	@onclick="ToggleContacts">
+	Show / Hide Contacts
+</Button>
+
+<_ComponentRefChild @ref="_child" ContactsVisible="IsContactsVisible" />
+
+@page "/learnBlazor/componentRef"
+@rendermode InteractiveServer
+@code {
+
+	[PersistentState]
+	public bool IsContactsVisible { get; set; }
+	private _ComponentRefChild? _child;
+
+	private void ToggleContacts()
+	{
+		IsContactsVisible = !IsContactsVisible;
+
+		if (IsContactsVisible)
+			_child?.ShowContacts();
+		else
+			_child?.HideContacts();
+	}
+}
