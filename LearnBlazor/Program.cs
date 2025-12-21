@@ -48,8 +48,6 @@ if (!Directory.Exists (@"C:\Temp\Storage\"))
 app.UseStaticFiles (new StaticFileOptions ()
 {
     FileProvider = new PhysicalFileProvider (@"C:\Temp\Storage"),
-    ServeUnknownFileTypes = true,
-    DefaultContentType = "text/plain"
 });
 
 // Serve static files from wwwroot (including .html)
