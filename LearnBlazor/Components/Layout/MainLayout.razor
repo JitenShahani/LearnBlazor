@@ -39,6 +39,7 @@
 @inject IJSRuntime JSRuntime
 @inject SidebarState SidebarState
 @code {
+	// Gets the current render mode from the cascading parameter set in Routes.razor
 	[CascadingParameter (Name = "RenderMode")]
 	public string? CurrentRenderMode { get; set; }
 
