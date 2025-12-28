@@ -14,7 +14,8 @@
 
 				<div class="badge bg-info rounded fs-6 p-2">
 					<Icon Name="IconName.Activity" Size="IconSize.x5" Class="me-1 fs-6" />
-					<span>Render Mode: @CurrentRenderMode</span>
+					@* <span>Render Mode: @CurrentRenderMode</span> *@
+					<span>Render Mode: <SectionOutlet SectionName="PageRenderMode" /></span>
 				</div>
 
 				<div>
@@ -40,8 +41,8 @@
 @inject SidebarState SidebarState
 @code {
 	// Gets the current render mode from the cascading parameter set in Routes.razor
-	[CascadingParameter (Name = "RenderMode")]
-	public string? CurrentRenderMode { get; set; }
+	// [CascadingParameter (Name = "RenderMode")]
+	// public string? CurrentRenderMode { get; set; }
 
 	private async Task ToggleMenu ()
 		=> await JSRuntime.InvokeVoidAsync ("sidebar.toggle");

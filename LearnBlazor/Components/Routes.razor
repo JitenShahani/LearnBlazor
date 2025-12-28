@@ -1,13 +1,20 @@
 ﻿<Router AppAssembly="typeof (Program).Assembly" NotFoundPage="typeof (Pages.NotFound)">
 	<Found Context="routeData">
-		<CascadingValue Name="RenderMode" Value="@(GetRenderMode (routeData))">
+		@* <CascadingValue Name="RenderMode" Value="@(GetRenderMode (routeData))"> *@
 			<RouteView RouteData="routeData" DefaultLayout="typeof (Layout.MainLayout)" />
-		</CascadingValue>
+		@* </CascadingValue> *@
 		<FocusOnNavigate RouteData="routeData" Selector="h1" />
 	</Found>
 </Router>
 
+
 @code {
+	// Below code reads the RenderModeAttribute on each page component to determine its render mode.
+	// This code will return Static if no RenderModeAttribute is found or you are using global render modes.
+
+	// A better approach would be to instead have each page/component report its own render mode using RendererInfo.Name
+	// If you wish to display the render mode in MainLayout.razor, you can define a SectionOutlet in MainLayout.razor
+	// and a SectionContent in each component to render it.
 	private string GetRenderMode (RouteData routeData)
 	{
 		var mode = routeData.PageType

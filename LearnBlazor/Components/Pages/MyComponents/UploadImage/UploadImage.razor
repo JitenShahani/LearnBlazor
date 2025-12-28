@@ -1,14 +1,36 @@
 ﻿<PageTitle>Upload Images</PageTitle>
 
-<h1>Upload Images</h1>
+<_PageRenderModeSection />
+
+<_InfoBox HeaderText="Upload Images">
+	<Body>
+		<ul>
+			<li>
+				How file uploads are configured
+			</li>
+			<ul>
+				<li>The app configures static file middleware to serve uploaded images directly from the file system.</li>
+				<li>On startup, it ensures the physical folder C:\Temp\Storage\ exists. If not, the folder is created so that uploads can be written and served.</li>
+				<li>UseStaticFiles(...) enables the app to serve files from this path in addition to the normal wwwroot folder.</li>
+			</ul>
+		</ul>
+		<ul>
+			<li>Validation and limits</li>
+			<ul>
+				<li>The component enforces a maximum number of files (_maxFilesAllowed = 3) to avoid large batch uploads. If this limit is exceeded, the upload is cancelled and an error message is shown.</li>
+				<li>Each file is limited to a maximum size of 1 MB. Files larger than this are skipped and reported in the error list so that only valid files are processed.</li>
+			</ul>
+		</ul>
+	</Body>
+</_InfoBox>
 
 <div class="mb-3">
 	<div class="form-group">
 		<InputFile id="fileInput"
-			class="form-control shadow-none"
-			OnChange="@LoadFiles"
-			multiple
-			accept=".jpeg, .jpg, .png" />
+					class="form-control shadow-none"
+					OnChange="@LoadFiles"
+					multiple
+					accept=".jpeg, .jpg, .png" />
 	</div>
 </div>
 
@@ -27,8 +49,6 @@
 
 <_Condition Evaluation="_errors.Any()">
 	<True>
-		<h2>Error(s)</h2>
-
 		<_Iterator Items="_errors" Context="error">
 			<Alert Color="AlertColor.Danger" Dismissable="true">
 				<p class="p-0 m-0">@error</p>
@@ -68,8 +88,8 @@
 		_errors.Clear ();
 		_status.Clear ();
 
-		if (_filesToUpload?.Count() > _maxFilesAllowed)
-			_errors.Add ($"Error : Attempting to upload {_filesToUpload.Count()} files, but only {_maxFilesAllowed} files are allowed.");
+		if (_filesToUpload?.Count () > _maxFilesAllowed)
+			_errors.Add ($"Error : Attempting to upload {_filesToUpload.Count ()} files, but only {_maxFilesAllowed} files are allowed.");
 
 		foreach (var file in _filesToUpload!)
 		{

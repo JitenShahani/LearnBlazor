@@ -50,7 +50,7 @@ app.UseStaticFiles (new StaticFileOptions ()
     FileProvider = new PhysicalFileProvider (@"C:\Temp\Storage"),
 });
 
-// Serve static files from wwwroot (including .html)
+// Serve static files including .html files.
 app.UseStaticFiles ();
 
 app.MapRazorComponents<App> ()
