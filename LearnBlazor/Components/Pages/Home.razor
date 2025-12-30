@@ -6,7 +6,17 @@
 
 Welcome to your new app.
 
-<_InfoBox HeaderText="Blazor Custom Element" Class="mt-3">
+<_InfoBox HeaderText="Localization Example" Class="mt-3">
+	<Body>
+		<_CultureSelector />
+
+		<h1>@Localizer["HomeTitle"]</h1>
+
+		@Localizer["HomeMessage"]
+	</Body>
+</_InfoBox>
+
+<_InfoBox HeaderText="Blazor Custom Element">
 	<Body>
 		<p>
 			A custom element is a type of Web Component that lets developers define their own HTML tags with custom behavior. Instead of being limited to built‑in tags like `div` or `button`, you can create something like `my-counter` or `my-home` that encapsulates its own rendering logic, styles, and functionality.
@@ -221,6 +231,7 @@ private Dictionary&lt;string, object&gt; _inputAttributes { get; set; } = new ()
 @inject IJSRuntime JSRuntime
 @inject ISampleData SampleData
 @inject IConfiguration Configuration
+@inject IStringLocalizer<Resource> Localizer
 @code {
 	private Button? _saveButton;
 	private Button? _cancelButton;

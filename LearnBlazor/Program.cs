@@ -19,6 +19,9 @@ builder.Services.AddScoped<CounterService> ();
 builder.Services.AddScoped<ISampleData, SampleData> ();
 builder.Services.AddScoped<ContactService> ();
 
+// Enable Localization
+builder.Services.AddLocalization();
+
 var app = builder.Build ();
 
 // Configure the HTTP request pipeline.
@@ -53,7 +56,28 @@ app.UseStaticFiles (new StaticFileOptions ()
 // Serve static files including .html files.
 app.UseStaticFiles ();
 
+// Enable Localization
+string[] supportedCultures = ["en-US", "es-MX", "hi", "mr", "gu"];
+app.UseRequestLocalization (new RequestLocalizationOptions ()
+    .AddSupportedCultures (supportedCultures)
+    .AddSupportedUICultures (supportedCultures)
+    .SetDefaultCulture (supportedCultures[0]));
+
 app.MapRazorComponents<App> ()
     .AddInteractiveServerRenderMode ();
+
+app.MapGet ("Culture", ([FromQuery] string culture, [FromQuery] string redirectUri, HttpContext context) =>
+{
+    if (culture is not null)
+    {
+        var requestCulture = new RequestCulture (culture, culture);
+        var cookieName = CookieRequestCultureProvider.DefaultCookieName;
+        var cookieValue = CookieRequestCultureProvider.MakeCookieValue (requestCulture);
+
+        context.Response.Cookies.Append (cookieName, cookieValue);
+
+        context.Response.Redirect (redirectUri);
+    }
+});
 
 app.Run ();

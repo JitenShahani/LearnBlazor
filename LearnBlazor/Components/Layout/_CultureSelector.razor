@@ -1,0 +1,46 @@
+﻿<div class="row g-3 align-items-center mb-3 w-25">
+    <div class="col-auto">
+        <label for="culture" class="col-form-label">Current Culture: </label>
+    </div>
+    <div class="col-auto">
+        <InputSelect id="culture" class="form-select" @bind-Value="Culture">
+            <option value="en-US">English - US</option>
+            <option value="es-MX">Spanish - MX</option>
+            <option value="hi">Hindi - IN</option>
+            <option value="mr">Marathi - IN</option>
+            <option value="gu">Gujarati - IN</option>
+        </InputSelect>
+
+    </div>
+	<div class="col-auto">
+        <span>@Thread.CurrentThread.CurrentCulture</span>
+    </div>
+</div>
+
+@inject NavigationManager NavManager
+@code
+{
+    protected override void OnInitialized()
+    {
+        Culture = CultureInfo.CurrentCulture;
+    }
+
+    private CultureInfo Culture
+    {
+        get
+        {
+            return CultureInfo.CurrentCulture;
+        }
+        set
+        {
+            if (CultureInfo.CurrentCulture != value)
+            {
+                var uri = new Uri(NavManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var cultureEscaped = Uri.EscapeDataString(value.Name);
+                var uriEscaped = Uri.EscapeDataString(uri);
+
+                NavManager.NavigateTo($"/Culture?culture={cultureEscaped}&redirectUri={uriEscaped}", forceLoad: true);
+            }
+        }
+    }
+}

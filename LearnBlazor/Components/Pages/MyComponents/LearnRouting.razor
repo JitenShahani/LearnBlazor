@@ -2,18 +2,18 @@
 
 <_PageRenderModeSection />
 
-<h1>Learn Routing</h1>
-
-<div class="alert alert-primary pb-0 mb-3">
-	<p>I have configured the route in NavMenu.razor to focus an id named `targetElement` which is an h2 tag with text `Main title`.</p>
-	<p>Pass some route based parameters...</p>
-	<ul>
-		<li>First parameter is a string.</li>
-		<li>Second parameter is an integer.</li>
-		<li>If you navigate to <code>/learnBlazor/learnRouting/catchAll/Hello, World!/Awesome/42069</code> and pass more than one route parameter(s), they will all be leveraged into a single parameter of type string.</li>
-		<li>This component also listens to Query parameters. Try navigating to <code>/learnBlazor/learnRouting?Param1=Hello, World!&Param2=42169</code></li>
-	</ul>
-</div>
+<_InfoBox HeaderText="Learn Routing">
+	<Body>
+		<p>I have configured the route in NavMenu.razor to focus an id named `targetElement` which is an h2 tag with text `Main title`.</p>
+		<p>Pass some route based parameters...</p>
+		<ul>
+			<li>First parameter is a string.</li>
+			<li>Second parameter is an integer.</li>
+			<li>If you navigate to <code>/learnBlazor/learnRouting/catchAll/Hello, World!/Awesome/42069</code> and pass more than one route parameter(s), they will all be leveraged into a single parameter of type string.</li>
+			<li>This component also listens to Query parameters. Try navigating to <code>/learnBlazor/learnRouting?Param1=Hello, World!&Param2=42169</code></li>
+		</ul>
+	</Body>
+</_InfoBox>
 
 @if (!string.IsNullOrWhiteSpace (Param1))
 {
