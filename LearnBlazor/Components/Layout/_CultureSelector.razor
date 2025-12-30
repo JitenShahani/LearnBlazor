@@ -4,11 +4,9 @@
     </div>
     <div class="col-auto">
         <InputSelect id="culture" class="form-select" @bind-Value="Culture">
-            <option value="en-US">English - US</option>
-            <option value="es-MX">Spanish - MX</option>
-            <option value="hi">Hindi - IN</option>
-            <option value="mr">Marathi - IN</option>
-            <option value="gu">Gujarati - IN</option>
+            <_Iterator Items="SupportedCultures" Context="culture">
+				<option value="@culture.Key">@culture.Description</option>"
+            </_Iterator>
         </InputSelect>
 
     </div>
@@ -20,11 +18,6 @@
 @inject NavigationManager NavManager
 @code
 {
-    protected override void OnInitialized()
-    {
-        Culture = CultureInfo.CurrentCulture;
-    }
-
     private CultureInfo Culture
     {
         get
@@ -42,5 +35,10 @@
                 NavManager.NavigateTo($"/Culture?culture={cultureEscaped}&redirectUri={uriEscaped}", forceLoad: true);
             }
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        Culture = CultureInfo.CurrentCulture;
     }
 }

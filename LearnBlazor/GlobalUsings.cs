@@ -12,3 +12,4 @@ global using LearnBlazor.Models;
 global using LearnBlazor.Locales;
 global using LearnBlazor.Services;
 global using LearnBlazor.Components;
+global using LearnBlazor.Components.Base;

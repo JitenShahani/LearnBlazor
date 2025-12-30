@@ -57,7 +57,7 @@ app.UseStaticFiles (new StaticFileOptions ()
 app.UseStaticFiles ();
 
 // Enable Localization
-string[] supportedCultures = ["en-US", "es-MX", "hi", "mr", "gu"];
+var supportedCultures = PageBase.SupportedCultures.Select(c => c.Key).ToArray();
 app.UseRequestLocalization (new RequestLocalizationOptions ()
     .AddSupportedCultures (supportedCultures)
     .AddSupportedUICultures (supportedCultures)

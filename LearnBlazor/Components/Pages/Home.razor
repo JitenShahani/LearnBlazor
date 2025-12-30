@@ -8,6 +8,16 @@ Welcome to your new app.
 
 <_InfoBox HeaderText="Localization Example" Class="mt-3">
 	<Body>
+		<p>
+			This application demonstrates localization using resource files (.resx) to support multiple languages. You can switch between different cultures using the culture selector below.
+		</p>
+
+		<p>
+			This selector calls the endpoint <code>/culture?culture={culture}&redirectUri={url}</code> to set a cookie with the selected culture and then navigates to the redirected url to apply the new culture.
+		</p>
+
+		<hr />
+
 		<_CultureSelector />
 
 		<h1>@Localizer["HomeTitle"]</h1>

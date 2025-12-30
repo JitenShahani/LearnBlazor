@@ -6,6 +6,15 @@ public class PageBase : ComponentBase
 
 	public string PageRenderMode { get; set; } = string.Empty;
 
+	public static (string Key, string Description)[] SupportedCultures { get; set; } =
+	[
+		( "en-US", "English - US" ),
+		( "es-MX", "Spanish - MX" ),
+		( "hi", "Hindi - IN" ),
+		( "mr", "Marathi - IN" ),
+		( "gu", "Gujarati - IN" )
+	];
+
 	protected override void OnInitialized ()
 	{
 		PageRenderMode = AssignedRenderMode switch
