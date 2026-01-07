@@ -14,15 +14,15 @@ public class Product
 
     public IEnumerable<Product_Prop> ProductProperties { get; set; } = [];
 
-    [EnumDataType (typeof (Category))]
-    public Category Category { get; set; }
+    [EnumDataType (typeof (ProductCategory))]
+    public ProductCategory Category { get; set; }
 
     [Required (ErrorMessage = "The {0} field is required.")]
     [Display (Name = "Available After")]
     public DateOnly? AvailableAfter { get; set; }
 }
 
-public enum Category
+public enum ProductCategory
 {
     [Description ("Starter & Appetizer")]
     Starter,

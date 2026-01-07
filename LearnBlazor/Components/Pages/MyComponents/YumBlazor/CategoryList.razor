@@ -1,0 +1,94 @@
+﻿<PageTitle>Category List</PageTitle>
+
+<_PageRenderModeSection />
+
+<_Condition Evaluation="_isLoading">
+	<True>
+		<div class="position-absolute w-75 h-75 d-flex flex-column align-items-center justify-content-center bg-white">
+			<img src="/images/loading.gif" alt="loading" />
+		</div>
+	</True>
+	<False>
+		<Card Class="shadow">
+			<CardHeader Color="CardColor.Dark">
+				<CardTitle Class="text-center p-0 m-0 fs-1">Category List</CardTitle>
+			</CardHeader>
+			<CardBody>
+				<div class="text-end">
+					<Button Type="ButtonType.Button" Color="ButtonColor.Primary" Outline="true">
+						<Icon Name="IconName.DatabaseAdd" />
+						Add New Category
+					</Button>
+				</div>
+				<CardText Class="mt-3">
+					<table class="table table-responsive table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th class="text-center" style="width: 10%;">Id</th>
+								<th class="text-center">Name</th>
+								<th class="text-center" style="width: 10%;">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<_Iterator Items="Categories" Context="category">
+								<tr>
+									<td>
+										@category.Id
+									</td>
+									<td>
+										@category.Name
+									</td>
+									<td>
+										<div class="text-center">
+											<Button Type="ButtonType.Button" Color="ButtonColor.Secondary" Outline="true" Class="me-2">
+												<Icon Name="IconName.Pencil" />
+											</Button>
+											<Button Type="ButtonType.Button" Color="ButtonColor.Danger" Outline="true">
+												<Icon Name="IconName.Trash3" />
+											</Button>
+										</div>
+									</td>
+								</tr>
+							</_Iterator>
+						</tbody>
+					</table>
+
+				</CardText>
+			</CardBody>
+		</Card>
+	</False>
+</_Condition>
+
+@page "/learnBlazor/yumBlazor/categoryList"
+@rendermode InteractiveServer
+@inject ICategoryRepository CategoryRepository
+@code {
+	private bool _isLoading;
+	private IEnumerable<Category> Categories { get; set; } = [];
+
+	// Remember, the reason we are not loading categories in OnInitializedAsync
+	// is to make sure the database isn't hit twice as OnInitializedAsync is called
+	// once during pre-rendering and again when the component is hydrated.
+	protected override async Task OnAfterRenderAsync (bool firstRender)
+	{
+		if (firstRender && (Categories is null || !Categories.Any ()))
+		{
+			_isLoading = true;
+			await InvokeAsync (StateHasChanged);
+
+			await Task.Delay (2000);
+			Categories = await LoadCategories ();
+
+			_isLoading = false;
+			await InvokeAsync (StateHasChanged);
+		}
+	}
+
+	private async Task<IEnumerable<Category>> LoadCategories ()
+		=> await CategoryRepository.GetAllCategoriesAsync ();
+
+	private async Task<GridDataProviderResult<Category>> CategoryDataProvider (GridDataProviderRequest<Category> request)
+	{
+		return await Task.FromResult (request.ApplyTo (Categories));
+	}
+}

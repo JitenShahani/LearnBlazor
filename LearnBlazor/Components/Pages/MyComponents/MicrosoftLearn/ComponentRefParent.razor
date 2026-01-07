@@ -2,7 +2,15 @@
 
 <_PageRenderModeSection />
 
-<h1>Component Referencing </h1>
+<_InfoBox HeaderText="Component Referencing">
+	<Body>
+		<p>
+			This example demonstrates how to reference a child component from a parent component in Blazor.
+			With <code>@@ref</code>, you can get a reference to a child component and call its methods directly.
+			This can be useful for scenarios where you need to control the child component's behavior from the parent.
+		</p>
+	</Body>
+</_InfoBox>
 
 <Button
 	Type="ButtonType.Button"
@@ -18,10 +26,10 @@
 @page "/learnBlazor/componentRef"
 @rendermode InteractiveServer
 @code {
+	private _ComponentRefChild? _child;
 
 	[PersistentState]
 	public bool IsContactsVisible { get; set; }
-	private _ComponentRefChild? _child;
 
 	private void ToggleContacts()
 	{
